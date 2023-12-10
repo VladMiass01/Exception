@@ -52,52 +52,62 @@ public class Main {
         System.out.println("Введите фамилию, имя, отчество, дату рождения (в формате dd.mm.yyyy)," +
                 "номер телефона (число без разделителей) и пол(символ латиницей f или m), разделенные пробелом");
         String text;
-        try(BufferedReader bf = new BufferedReader(new InputStreamReader(System.in))) {
+        try (BufferedReader bf = new BufferedReader(new InputStreamReader(System.in))) {
             text = bf.readLine();
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new Exception("Произошла ошибка при работе с консолью");
         }
-
         String[] array = text.split(" ");
         if (array.length != 6) {
             throw new Exception("Введено неверное количество параметров");
         }
-
         String surname = array[0].trim();
         String name = array[1].trim();
         String patronymic = array[2].trim();
+        Date birthday = parseBirthday(array[3].trim());
+        long phone = parsePhone(array[4].trim());
+        String sex = parseSex(array[5].toLowerCase().trim());
+        writer( surname, name, patronymic, birthday, phone, sex);
+    }
 
+    public static Date parseBirthday(String adate) throws ParseException {
         SimpleDateFormat format = new SimpleDateFormat("dd.mm.yyyy");
-        Date birthdate;
+        Date birthday;
         try {
-            birthdate = format.parse(array[3].trim());
+            birthday = format.parse(adate);
         }
         catch (ParseException e){
             throw new ParseException("Неверный формат даты рождения", e.getErrorOffset());
         }
+        return birthday;
+    }
 
+    public static long parsePhone(String aphone) {
         long phone = 0;
         try {
-            phone = Long.parseLong(array[4].trim());
-        }
-        catch (NumberFormatException e) {
+            phone = Long.parseLong(aphone.trim());
+        } catch (NumberFormatException e) {
             throw new NumberFormatException("Неверный формат телефона");
         }
+        return phone;
+    }
 
-        String sex = array[5].trim();
-        if (!sex.toLowerCase().equals("m") && !sex.toLowerCase().equals("f")){
+    public static String parseSex(String asex) {
+        if (!asex.equals("m") && !asex.equals("f")) {
             throw new RuntimeException("Неверно введен пол");
         }
+        return asex;
+    }
 
+    public static void writer(String surname, String name, String patronymic, Date birthday, long phone, String sex)
+            throws FileSystemException {
         String fileName = "./" + surname.toLowerCase() + ".txt";
         File file = new File(fileName);
         try (FileWriter fileWriter = new FileWriter(file, true)) {
             if (file.length() > 0){
                 fileWriter.write('\n');
             }
-            fileWriter.write(String.format("%s %s %s %s %s %s", surname, name, patronymic, format.format(birthdate),
-                    phone, sex));
+            fileWriter.write(String.format("%s %s %s %s %s %s", surname, name, patronymic, birthday, phone, sex));
         }
         catch (IOException e) {
             throw new FileSystemException("Возникла ошибка при работе с файлом");

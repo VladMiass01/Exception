@@ -64,7 +64,7 @@ public class Main {
         String surname = array[0].trim();
         String name = array[1].trim();
         String patronymic = array[2].trim();
-        String birthday = String.valueOf(parseBirthday(array[3].trim()));
+        String birthday = parseBirthday(array[3].trim());
         long phone = parsePhone(array[4].trim());
         String sex = parseSex(array[5].toLowerCase().trim());
         writer(surname, name, patronymic, birthday, phone, sex);

@@ -1,6 +1,9 @@
 import java.io.*;
 import java.nio.file.FileSystemException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 public class Main {
     public static void main(String[] args) {
@@ -61,23 +64,23 @@ public class Main {
         String surname = array[0].trim();
         String name = array[1].trim();
         String patronymic = array[2].trim();
-        String birthday = array[3].trim();
+        String birthday = String.valueOf(parseBirthday(array[3].trim()));
         long phone = parsePhone(array[4].trim());
         String sex = parseSex(array[5].toLowerCase().trim());
         writer(surname, name, patronymic, birthday, phone, sex);
     }
 
-//    public static Date parseBirthday(String adate) throws ParseException {
-//        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-//        Date birthday;
-//        try {
-//            birthday = format.parse(adate);
-//        }
-//        catch (ParseException e){
-//            throw new ParseException("Неверный формат даты рождения", e.getErrorOffset());
-//        }
-//        return birthday;
-//    }
+    public static String parseBirthday(String adate) throws ParseException {
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+        Date birthday;
+        try {
+            birthday = format.parse(adate);
+        }
+        catch (ParseException e) {
+            throw new ParseException("Неверный формат даты рождения", e.getErrorOffset());
+        }
+        return format.format(birthday);
+    }
 
     public static long parsePhone(String aphone) {
         long phone;

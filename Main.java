@@ -1,9 +1,6 @@
 import java.io.*;
 import java.nio.file.FileSystemException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 
 public class Main {
     public static void main(String[] args) {
@@ -64,23 +61,23 @@ public class Main {
         String surname = array[0].trim();
         String name = array[1].trim();
         String patronymic = array[2].trim();
-        Date birthday = parseBirthday(array[3].trim());
+        String birthday = array[3].trim();
         long phone = parsePhone(array[4].trim());
         String sex = parseSex(array[5].toLowerCase().trim());
         writer(surname, name, patronymic, birthday, phone, sex);
     }
 
-    public static Date parseBirthday(String adate) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-        Date birthday;
-        try {
-            birthday = format.parse(adate);
-        }
-        catch (ParseException e){
-            throw new ParseException("Неверный формат даты рождения", e.getErrorOffset());
-        }
-        return birthday;
-    }
+//    public static Date parseBirthday(String adate) throws ParseException {
+//        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
+//        Date birthday;
+//        try {
+//            birthday = format.parse(adate);
+//        }
+//        catch (ParseException e){
+//            throw new ParseException("Неверный формат даты рождения", e.getErrorOffset());
+//        }
+//        return birthday;
+//    }
 
     public static long parsePhone(String aphone) {
         long phone;
@@ -99,16 +96,15 @@ public class Main {
         return asex;
     }
 
-    public static void writer(String surname, String name, String patronymic, Date birthday, long phone, String sex)
+    public static void writer(String surname, String name, String patronymic, String birthday, long phone, String sex)
             throws FileSystemException {
-        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
         String fileName = "./" + surname.toLowerCase() + ".txt";
         File file = new File(fileName);
         try (FileWriter fileWriter = new FileWriter(file, true)) {
             if (file.length() > 0){
                 fileWriter.write('\n');
             }
-            fileWriter.write(String.format("%s %s %s %s %s %s", surname, name, patronymic, format.format(birthday), phone, sex));
+            fileWriter.write(String.format("%s %s %s %s %s %s", surname, name, patronymic, birthday, phone, sex));
         }
         catch (IOException e) {
             throw new FileSystemException("Возникла ошибка при работе с файлом");

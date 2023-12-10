@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
         /*
         Напишите приложение, которое будет запрашивать у пользователя следующие данные в произвольном порядке,
         разделенные пробелом:
@@ -71,7 +71,7 @@ public class Main {
     }
 
     public static Date parseBirthday(String adate) throws ParseException {
-        SimpleDateFormat format = new SimpleDateFormat("dd.mm.yyyy");
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
         Date birthday;
         try {
             birthday = format.parse(adate);
@@ -83,7 +83,7 @@ public class Main {
     }
 
     public static long parsePhone(String aphone) {
-        long phone = 0;
+        long phone;
         try {
             phone = Long.parseLong(aphone.trim());
         } catch (NumberFormatException e) {
@@ -101,7 +101,7 @@ public class Main {
 
     public static void writer(String surname, String name, String patronymic, Date birthday, long phone, String sex)
             throws FileSystemException {
-        SimpleDateFormat format = new SimpleDateFormat("dd.mm.yyyy");
+        SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
         String fileName = "./" + surname.toLowerCase() + ".txt";
         File file = new File(fileName);
         try (FileWriter fileWriter = new FileWriter(file, true)) {

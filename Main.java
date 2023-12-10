@@ -67,7 +67,7 @@ public class Main {
         Date birthday = parseBirthday(array[3].trim());
         long phone = parsePhone(array[4].trim());
         String sex = parseSex(array[5].toLowerCase().trim());
-        writer( surname, name, patronymic, birthday, phone, sex);
+        writer(surname, name, patronymic, birthday, phone, sex);
     }
 
     public static Date parseBirthday(String adate) throws ParseException {
@@ -101,13 +101,14 @@ public class Main {
 
     public static void writer(String surname, String name, String patronymic, Date birthday, long phone, String sex)
             throws FileSystemException {
+        SimpleDateFormat format = new SimpleDateFormat("dd.mm.yyyy");
         String fileName = "./" + surname.toLowerCase() + ".txt";
         File file = new File(fileName);
         try (FileWriter fileWriter = new FileWriter(file, true)) {
             if (file.length() > 0){
                 fileWriter.write('\n');
             }
-            fileWriter.write(String.format("%s %s %s %s %s %s", surname, name, patronymic, birthday, phone, sex));
+            fileWriter.write(String.format("%s %s %s %s %s %s", surname, name, patronymic, format.format(birthday), phone, sex));
         }
         catch (IOException e) {
             throw new FileSystemException("Возникла ошибка при работе с файлом");

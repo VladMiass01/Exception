@@ -102,8 +102,7 @@ public class Main {
         return asex;
     }
 
-    public static void writer(String surname, String name, String patronymic, String birthday, long phone, String sex)
-            throws FileSystemException {
+    public static void writer(String surname, String name, String patronymic, String birthday, long phone, String sex) {
         String fileName = "./" + surname.toLowerCase() + ".txt";
         File file = new File(fileName);
         try (FileWriter fileWriter = new FileWriter(file, true)) {

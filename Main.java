@@ -51,11 +51,12 @@ public class Main {
     public static void makeRecord() throws Exception {
         System.out.println("Введите фамилию, имя, отчество, дату рождения (в формате dd.mm.yyyy)," +
                 "номер телефона (число без разделителей) и пол(символ латиницей f или m), разделенные пробелом");
-        String text;
+        String text = null;
         try (BufferedReader bf = new BufferedReader(new InputStreamReader(System.in))) {
             text = bf.readLine();
         } catch (IOException e) {
-            throw new Exception("Произошла ошибка при работе с консолью");
+            System.out.println("Произошла ошибка при работе с консолью");
+            System.out.println(e.getMessage());
         }
         String[] array = text.split(" ");
         if (array.length != 6) {
@@ -70,24 +71,26 @@ public class Main {
         writer(surname, name, patronymic, birthday, phone, sex);
     }
 
-    public static String parseBirthday(String adate) throws ParseException {
+    public static String parseBirthday(String adate) {
         SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
-        Date birthday;
+        Date birthday = null;
         try {
             birthday = format.parse(adate);
         }
         catch (ParseException e) {
-            throw new ParseException("Неверный формат даты рождения", e.getErrorOffset());
+            System.out.println("Неверный формат даты рождения");
+            System.out.println(e.getMessage());
         }
         return format.format(birthday);
     }
 
     public static long parsePhone(String aphone) {
-        long phone;
+        long phone = 0;
         try {
             phone = Long.parseLong(aphone.trim());
         } catch (NumberFormatException e) {
-            throw new NumberFormatException("Неверный формат телефона");
+            System.out.println("Неверный формат телефона");
+            System.out.println(e.getMessage());
         }
         return phone;
     }
@@ -110,7 +113,8 @@ public class Main {
             fileWriter.write(String.format("%s %s %s %s %s %s", surname, name, patronymic, birthday, phone, sex));
         }
         catch (IOException e) {
-            throw new FileSystemException("Возникла ошибка при работе с файлом");
+            System.out.println("Возникла ошибка при работе с файлом");
+            System.out.println(e.getMessage());
         }
     }
 }

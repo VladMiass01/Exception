@@ -7,38 +7,10 @@ import java.util.Date;
 
 public class Main {
     public static void main(String[] args) {
-        /*
-        Напишите приложение, которое будет запрашивать у пользователя следующие данные в произвольном порядке,
-        разделенные пробелом:
-
-        Фамилия Имя Отчество датарождения номертелефона пол
-        Форматы данных:
-        фамилия, имя, отчество - строки
-        дата_рождения - строка формата dd.mm.yyyy
-        номер_телефона - целое беззнаковое число без форматирования
-        пол - символ латиницей f или m
-
-        Приложение должно проверить введенные данные по количеству. Если количество не совпадает с требуемым,
-        вернуть код ошибки, обработать его и показать пользователю сообщение, что он ввел меньше и больше данных,
-        чем требуется.
-
-        Приложение должно попытаться распарсить полученные значения и выделить из них требуемые параметры.
-        Если форматы данных не совпадают, нужно бросить исключение, соответствующее типу проблемы.
-        Можно использовать встроенные типы java и создать свои. Исключение должно быть корректно обработано,
-        пользователю выведено сообщение с информацией, что именно неверно.
-
-        Если всё введено и обработано верно, должен создаться файл с названием, равным фамилии,
-        в него в одну строку должны записаться полученные данные, вида
-        Фамилия Имя Отчество датарождения номертелефона пол
-
-        Однофамильцы должны записаться в один и тот же файл, в отдельные строки.
-        При возникновении проблемы с чтением-записью в файл, исключение должно быть корректно обработано,
-        пользователь должен увидеть стектрейс ошибки.
-        */
 
         try {
             makeRecord();
-            System.out.println("success");
+            System.out.println("Данные записаны");
         }
         catch (FileSystemException e) {
             System.out.println(e.getMessage());
@@ -54,13 +26,10 @@ public class Main {
         String text = null;
         try (BufferedReader bf = new BufferedReader(new InputStreamReader(System.in))) {
             text = bf.readLine();
-        } catch (IOException e) {
-            System.out.println("Произошла ошибка при работе с консолью");
-            System.out.println(e.getMessage());
-        }
+
         String[] array = text.split(" ");
         if (array.length != 6) {
-            throw new Exception("Введено неверное количество параметров");
+            throw new DataException("Введено неверное количество параметров");
         }
         String surname = array[0].trim();
         String name = array[1].trim();
@@ -69,6 +38,11 @@ public class Main {
         long phone = parsePhone(array[4].trim());
         String sex = parseSex(array[5].toLowerCase().trim());
         writer(surname, name, patronymic, birthday, phone, sex);
+        }
+        catch (IOException e) {
+            System.out.println("Произошла ошибка при работе с консолью");
+            System.out.println(e.getMessage());
+        }
     }
 
     public static String parseBirthday(String adate) {
@@ -84,8 +58,11 @@ public class Main {
         return format.format(birthday);
     }
 
-    public static long parsePhone(String aphone) {
+    public static long parsePhone(String aphone) throws DataException {
         long phone = 0;
+        if (aphone.length() != 10) {
+            throw new DataException("Не верное кол-во знаков в номере телефона.");
+        }
         try {
             phone = Long.parseLong(aphone.trim());
         } catch (NumberFormatException e) {
@@ -95,11 +72,11 @@ public class Main {
         return phone;
     }
 
-    public static String parseSex(String asex) {
-        if (!asex.equals("m") && !asex.equals("f")) {
-            throw new RuntimeException("Неверно введен пол");
+    public static String parseSex(String asex) throws DataException {
+        if (asex.equals("m") || asex.equals("f")) {
+            return asex;
         }
-        return asex;
+        throw new DataException("Неверно введен пол");
     }
 
     public static void writer(String surname, String name, String patronymic, String birthday, long phone, String sex) {
